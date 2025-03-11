@@ -1,41 +1,40 @@
 
-
 pipeline {
     agent none
     stages {
-        stage('CentOS 7 - Deploy Web App') {
+        stage('Ubuntu 20.04 - Deploy Web App') {
             agent {
-                docker { 
-                    image 'centos:7'
-                    args '--user root'  // Run the container as root to avoid permission issues
+                docker {
+                    image 'ubuntu:20.04'  // Changed to Ubuntu
+                    args '--user root --dns 8.8.8.8 --dns 8.8.4.4'
                 }
             }
             steps {
                 script {
-                    // Install Apache HTTPD
-                    sh 'yum update -y'
-                    sh 'yum install -y httpd'
+                    // Update and install Apache HTTPD on Ubuntu
+                    sh 'apt-get update -y'
+                    sh 'apt-get install -y apache2'
 
-                    // Copy your application to the container (e.g., a simple index.html or your app)
+                    // Copy your application to the container
                     sh 'echo "Hello, World!" > /var/www/html/index.html'
 
-                    // Start the HTTP server
-                    sh 'systemctl start httpd'
-                    sh 'systemctl enable httpd'
+                    // Start the Apache HTTP server
+                    sh 'systemctl start apache2'
+                    sh 'systemctl enable apache2'
                 }
             }
         }
-        stage('CentOS 8 - Update') {
+        stage('Ubuntu 20.04 - Update') {
             agent {
-                docker { 
-                    image 'centos:8'
-                    args '--user root'  // Run the container as root to avoid permission issues
+                docker {
+                    image 'ubuntu:20.04'  // Changed to Ubuntu
+                    args '--user root --dns 8.8.8.8 --dns 8.8.4.4'
                 }
             }
             steps {
                 script {
-                    // Command for CentOS 8 (e.g., only update)
-                    sh 'yum update -y'
+                    // Update Ubuntu container
+                    sh 'apt-get update -y'
                 }
             }
         }
