@@ -1,0 +1,29 @@
+pipeline {
+    agent none
+    stages {
+        stage('CentOS 7') {
+            agent {
+                docker { image 'centos:7' }  // Use CentOS 7 Docker image
+            }
+            steps {
+                script {
+                    // Commands to run on CentOS 7
+                    sh 'yum update -y'
+                    sh 'yum install -y httpd'
+                }
+            }
+        }
+        stage('CentOS 8') {
+            agent {
+                docker { image 'centos:8' }  // Use CentOS 8 Docker image
+            }
+            steps {
+                script {
+                    // Command to run on CentOS 8
+                    sh 'yum update -y'
+                }
+            }
+        }
+    }
+}
+
